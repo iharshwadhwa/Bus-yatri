@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+// ***************************************************************
+// FINAL FIX: Define API_URL at the top of the file (module level).
+// This ensures Vite can process it correctly during the Vercel build.
+// ***************************************************************
+const API_URL = import.meta.env.VITE_API_URL; 
+
 const Signup = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:5000/api/register', {
+    
+    // The API call now uses the correct variable pointing to your Render URL
+    const response = await fetch(`${API_URL}/api/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
@@ -17,7 +25,9 @@ const Signup = () => {
       alert("Registration Successful! Please Login.");
       navigate('/');
     } else {
-      alert("Registration Failed");
+      // It's helpful to see the error status in development
+      const errorText = await response.text();
+      alert(`Registration Failed: ${response.status} - ${errorText}`);
     }
   };
 
