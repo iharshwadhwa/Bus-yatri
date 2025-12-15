@@ -111,6 +111,39 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// 4. BUS SEARCH ROUTE (NEW! Searches for buses based on source/destination)
+app.get('/api/buses/search', async (req, res) => {
+    try {
+        const { source, destination, date } = req.query;
+
+        // **CRITICAL:** Check the database name (BusYatri-DB) vs. your inserted data (test).
+        // If the data is in 'test.buses', the query below is what is running!
+        
+        // Build the query object
+        const query = { 
+            source: { $regex: new RegExp(source, 'i') }, // Case-insensitive search
+            destination: { $regex: new RegExp(destination, 'i') } // Case-insensitive search
+        };
+
+        // If a date is provided, add it to the query
+        if (date) {
+            // Note: If you saved the date as a simple string, match the string
+            query.date = date; 
+        }
+
+        const buses = await Bus.find(query);
+
+        if (buses.length === 0) {
+            return res.status(200).json({ message: "No buses found for this route." });
+        }
+
+        res.json(buses);
+    } catch (err) {
+        console.error("Bus Search Error:", err);
+        res.status(500).json({ error: 'Failed to search for buses' });
+    }
+});
+
 // 1. Get All Trips
 app.get('/api/trips', async (req, res) => {
   try {
@@ -121,7 +154,6 @@ app.get('/api/trips', async (req, res) => {
   }
 });
 
-// ... (Your Register, Login, and Get Trips routes are above this) ...
 
 // 2. BOOK SEATS (Secure Version with Validation)
 app.post('/api/book', async (req, res) => {
