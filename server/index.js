@@ -111,29 +111,28 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// 4. BUS SEARCH ROUTE (NEW! Searches for buses based on source/destination)
+// 4. BUS SEARCH ROUTE (FINAL WORKING VERSION)
 app.get('/api/buses/search', async (req, res) => {
     try {
         const { source, destination, date } = req.query;
 
-        // **CRITICAL:** Check the database name (BusYatri-DB) vs. your inserted data (test).
-        // If the data is in 'test.buses', the query below is what is running!
-        
-        // Build the query object
+        // 1. Build the core query object
         const query = { 
-            source: { $regex: new RegExp(source, 'i') }, // Case-insensitive search
-            destination: { $regex: new RegExp(destination, 'i') } // Case-insensitive search
+            // Ensures search is case-insensitive (i)
+            source: { $regex: new RegExp(source, 'i') }, 
+            destination: { $regex: new RegExp(destination, 'i') } 
         };
 
-        // If a date is provided, add it to the query
-        if (date) {
-            // Note: If you saved the date as a simple string, match the string
-            query.date = date; 
+        // 2. CRITICAL CHANGE: Only add the date to the query if it's a valid value.
+        // We check if 'date' exists AND is NOT the common empty/placeholder value.
+        if (date && date.toLowerCase() !== 'mm/dd/yyyy' && date.length > 5) {
+             query.date = date; 
         }
 
         const buses = await Bus.find(query);
 
         if (buses.length === 0) {
+            // NOTE: Returning 200 is correct here, as the search was successful but found nothing.
             return res.status(200).json({ message: "No buses found for this route." });
         }
 
