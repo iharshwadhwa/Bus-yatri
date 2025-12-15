@@ -249,7 +249,7 @@ const Home = () => {
               {/* EAST: Kolkata -> Digha (New Coverage) */}
               <div className="relative rounded-2xl overflow-hidden shadow-lg group cursor-pointer h-64" 
                    onClick={() => applyQuickSearch('Kolkata', 'Digha')}>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/New_Digha_Beach.jpg/640px-New_Digha_Beach.jpg" alt="Digha" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img src="https://images.unsplash.com/photo-1571679654681-ba01b9e1e117?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8a29sa2F0YXxlbnwwfHwwfHx8MA%3D%3D" alt="Digha" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/60 to-transparent p-4 pt-20">
                   <p className="text-white/80 text-xs font-medium uppercase tracking-wider mb-1">East India</p>
                   <h3 className="text-white font-bold text-lg">Kolkata ➝ Digha</h3>
